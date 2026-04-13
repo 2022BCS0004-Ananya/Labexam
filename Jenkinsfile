@@ -3,48 +3,27 @@ pipeline {
 
     stages {
 
-        stage('Setup Dependencies') {
+        stage('Setup') {
             steps {
-                sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
-                '''
+                sh 'pip3 install pandas scikit-learn joblib'
             }
         }
 
-        stage('Train Model') {
+        stage('Train') {
             steps {
-                sh '''
-                    . venv/bin/activate
-                    python train.py
-                '''
+                sh 'python3 train.py'
             }
         }
 
-        stage('Identity Print') {
+        stage('Identity') {
             steps {
                 echo 'Student: Ananya Abhilash | Roll No: 2022BCS0004'
             }
         }
 
-        stage('Archive Output') {
+        stage('Archive') {
             steps {
-                sh '''
-                    . venv/bin/activate
-                    mkdir -p outputs
-
-                    echo "Copying artifacts from app/artifacts..."
-
-                    cp -f model.pkl outputs/ 2>/dev/null || true
-                    cp -f metrics.json outputs/ 2>/dev/null || true
-
-                    echo "Final output directory:"
-                    ls -R outputs || true
-                '''
-
-                archiveArtifacts artifacts: 'outputs/**', fingerprint: true
+                archiveArtifacts artifacts: 'model.pkl,metrics.json', fingerprint: true
             }
         }
     }
