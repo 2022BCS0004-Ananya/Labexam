@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.9'
+        }
+    }
 
     stages {
 
@@ -17,7 +21,7 @@ pipeline {
 
         stage('Identity') {
             steps {
-                echo 'Student: Ananya Abhilash | Roll No: 2022BCS0004'
+                echo 'Student: Ananya Abhilash | Roll No: 222EC50004'
             }
         }
 
