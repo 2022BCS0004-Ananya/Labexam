@@ -1,32 +1,21 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.9'
+        }
+    }
 
     stages {
 
-        stage('Setup Python') {
+        stage('Setup') {
             steps {
-                sh '''
-                # Download Miniconda (portable Python)
-                wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-                
-                # Install locally (no root needed)
-                bash miniconda.sh -b -p $HOME/miniconda
-                
-                # Activate environment
-                export PATH="$HOME/miniconda/bin:$PATH"
-                
-                # Install libraries
-                pip install pandas scikit-learn joblib
-                '''
+                sh 'pip install pandas scikit-learn joblib'
             }
         }
 
         stage('Train') {
             steps {
-                sh '''
-                export PATH="$HOME/miniconda/bin:$PATH"
-                python train.py
-                '''
+                sh 'python train.py'
             }
         }
 
