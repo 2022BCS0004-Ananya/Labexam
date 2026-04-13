@@ -5,11 +5,7 @@ pipeline {
 
         stage('Setup') {
             steps {
-                       sh '''
-            apt-get update -y
-            apt-get install -y python3 python3-pip
-            python3 -m pip install pandas scikit-learn joblib
-        '''
+                sh 'python3 -m pip install pandas scikit-learn joblib --break-system-packages'
             }
         }
 
