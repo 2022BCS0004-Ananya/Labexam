@@ -1,33 +1,50 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.9'
-        }
-    }
+    agent any
 
     stages {
 
-        stage('Setup') {
+        stage('Setup Dependencies') {
             steps {
-                sh 'pip install pandas scikit-learn joblib'
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                '''
             }
         }
 
-        stage('Train') {
+        stage('Train Model') {
             steps {
-                sh 'python train.py'
+                sh '''
+                    . venv/bin/activate
+                    python train.py
+                '''
             }
         }
 
-        stage('Identity') {
+        stage('Identity Print') {
             steps {
                 echo 'Student: Ananya Abhilash | Roll No: 2022BCS0004'
             }
         }
 
-        stage('Archive') {
+        stage('Archive Output') {
             steps {
-                archiveArtifacts artifacts: 'model.pkl, metrics.json', fingerprint: true
+                sh '''
+                    . venv/bin/activate
+                    mkdir -p outputs
+
+                    echo "Copying artifacts from app/artifacts..."
+
+                    cp -f model.pkl outputs/ 2>/dev/null || true
+                    cp -f metrics.json outputs/ 2>/dev/null || true
+
+                    echo "Final output directory:"
+                    ls -R outputs || true
+                '''
+
+                archiveArtifacts artifacts: 'outputs/**', fingerprint: true
             }
         }
     }

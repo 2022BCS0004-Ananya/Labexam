@@ -2,8 +2,9 @@ FROM python:3.9
 
 WORKDIR /app
 
-COPY . .
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install pandas scikit-learn joblib
+COPY . .
 
 CMD ["python", "train.py"]
