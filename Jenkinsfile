@@ -1,20 +1,21 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.9'
+        }
+    }
 
     stages {
 
         stage('Setup') {
             steps {
-                sh '''
-                python3 --version || true
-                pip3 install --user pandas scikit-learn joblib
-                '''
+                sh 'pip install pandas scikit-learn joblib'
             }
         }
 
         stage('Train') {
             steps {
-                sh 'python3 train.py'
+                sh 'python train.py'
             }
         }
 
