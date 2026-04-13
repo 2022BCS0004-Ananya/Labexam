@@ -6,7 +6,7 @@ import joblib
 import json
 
 # Load dataset (IMPORTANT: separator is ;)
-df = "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv"
+df = pd.read_csv("winequality.csv", sep=';')
 
 # Features and target
 X = df.drop("quality", axis=1)
